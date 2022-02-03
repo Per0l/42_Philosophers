@@ -1,0 +1,11 @@
+{
+	"files.associations": {
+		"pthread.h": "c",
+		"writelib.h": "c",
+		"parser.h": "c",
+		"stdio.h": "c",
+		"structs.h": "c",
+		"logger.h": "c",
+		"time_utils.h": "c"
+	}
+}

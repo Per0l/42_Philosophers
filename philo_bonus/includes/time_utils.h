@@ -1,39 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   time_utils.c                                       :+:      :+:    :+:   */
+/*   time_utils.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aperol-h <aperol-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/01 17:54:11 by aperol-h          #+#    #+#             */
-/*   Updated: 2022/04/18 17:30:10 by aperol-h         ###   ########.fr       */
+/*   Created: 2022/02/01 17:54:26 by aperol-h          #+#    #+#             */
+/*   Updated: 2022/02/03 15:41:11 by aperol-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "time_utils.h"
+#ifndef TIME_UTILS_H
+# define TIME_UTILS_H
 
-long	get_time_ms(void)
-{
-	struct timeval	time;
+# include <sys/time.h>
+# include <unistd.h>
 
-	gettimeofday(&time, NULL);
-	return (time.tv_sec * 1000 + time.tv_usec / 1000);
-}
-
-long	get_timestamp(void)
-{
-	static long		timebase;
-
-	if (timebase == 0)
-		timebase = get_time_ms();
-	return (get_time_ms() - timebase);
-}
-
-void	msleep(int ms)
-{
-	long	start;
-
-	start = get_time_ms();
-	while ((get_time_ms() - start) < ms)
-		usleep(50);
-}
+void	msleep(int ms);
+long	get_timestamp(void);
+long	get_time_ms(void);
+#endif

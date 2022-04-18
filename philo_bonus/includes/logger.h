@@ -1,39 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   time_utils.c                                       :+:      :+:    :+:   */
+/*   logger.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aperol-h <aperol-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/01 17:54:11 by aperol-h          #+#    #+#             */
-/*   Updated: 2022/04/18 17:30:10 by aperol-h         ###   ########.fr       */
+/*   Created: 2022/02/01 17:20:59 by aperol-h          #+#    #+#             */
+/*   Updated: 2022/02/01 17:39:35 by aperol-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "time_utils.h"
+#ifndef LOGGER_H
+# define LOGGER_H
 
-long	get_time_ms(void)
+# include "structs.h"
+
+enum e_philo_state
 {
-	struct timeval	time;
-
-	gettimeofday(&time, NULL);
-	return (time.tv_sec * 1000 + time.tv_usec / 1000);
-}
-
-long	get_timestamp(void)
-{
-	static long		timebase;
-
-	if (timebase == 0)
-		timebase = get_time_ms();
-	return (get_time_ms() - timebase);
-}
-
-void	msleep(int ms)
-{
-	long	start;
-
-	start = get_time_ms();
-	while ((get_time_ms() - start) < ms)
-		usleep(50);
-}
+	TAKING,
+	EATING,
+	SLEEPING,
+	THINKING,
+	DIED
+};
+void	print_state(t_philo *philo, int state);
+#endif

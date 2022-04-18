@@ -4,9 +4,9 @@ OBJS		=	${SRCS:.c=.o}
 
 NAME		=	philo
 
-CC			=	gcc
+CC			=	cc
 
-CFLAGS		=	-pthread #-g -fsanitize=address
+CFLAGS		=	-pthread -Wall -Werror -Wextra -fsanitize=address
 
 %.o: %.c
 				$(CC) $(CFLAGS) -I./includes $< -c -o ${<:.c=.o}
@@ -15,8 +15,6 @@ all:			${NAME}
 
 ${NAME}:		${OBJS}
 				${CC} ${CFLAGS} ${OBJS} -o ${NAME}
-
-bonus:			${BONUS_NAME}
 			
 clean:
 				rm -f ${OBJS} 

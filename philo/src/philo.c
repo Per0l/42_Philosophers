@@ -6,11 +6,12 @@
 /*   By: aperol-h <aperol-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 18:44:21 by aperol-h          #+#    #+#             */
-/*   Updated: 2022/02/03 16:35:01 by aperol-h         ###   ########.fr       */
+/*   Updated: 2022/04/18 17:25:07 by aperol-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <stdio.h>
 
 void	stop_simulation(t_program *program)
 {
@@ -20,6 +21,7 @@ void	stop_simulation(t_program *program)
 	program->finished = 1;
 	while (i++ < program->n_philos - 1)
 	{
+		unlock_forks(&program->philos[i]);
 		program->philos[i].is_alive = 0;
 	}
 }
@@ -44,6 +46,11 @@ void	lock_forks(t_philo *philo)
 	else
 		pthread_mutex_lock(fork2);
 	print_state(philo, TAKING);
+	if (philo->program->n_philos == 1)
+	{
+		msleep(philo->program->time_to_die + 20);
+		return ;
+	}
 	if (philo->id % 2)
 		pthread_mutex_lock(fork2);
 	else
@@ -54,7 +61,6 @@ void	lock_forks(t_philo *philo)
 void	*check_death(void *self)
 {
 	t_philo			*philo;
-	long			time_now;
 
 	philo = self;
 	while (!philo->program->finished)
@@ -68,16 +74,16 @@ void	*check_death(void *self)
 		}
 		if (philo->program->n_philos_ate == philo->program->n_philos)
 			stop_simulation(philo->program);
-		time_now = get_timestamp();
-		if ((time_now - philo->timestamp_ate) >= philo->program->time_to_die)
+		if ((get_timestamp() - philo->timestamp_ate)
+			>= philo->program->time_to_die)
 		{
 			philo->is_alive = 0;
 			print_state(philo, DIED);
-			unlock_forks(philo);
 			stop_simulation(philo->program);
 		}
 		usleep(1000);
 	}
+	return (NULL);
 }
 
 void	*philo_thread(void *self)
@@ -89,13 +95,15 @@ void	*philo_thread(void *self)
 	if (pthread_create(&cth, NULL, check_death, philo))
 		return (0);
 	pthread_detach(cth);
-	while (philo->is_alive)
+	while (philo->is_alive && !philo->program->finished)
 	{
 		lock_forks(philo);
 		if (philo->program->finished)
 			break ;
 		print_state(philo, EATING);
 		msleep(philo->program->time_to_eat);
+		if (!philo->is_alive)
+			break ;
 		unlock_forks(philo);
 		if (philo->program->finished)
 			break ;

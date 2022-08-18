@@ -6,7 +6,7 @@
 /*   By: aperol-h <aperol-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 18:44:21 by aperol-h          #+#    #+#             */
-/*   Updated: 2022/08/18 18:23:36 by aperol-h         ###   ########.fr       */
+/*   Updated: 2022/08/18 18:44:25 by aperol-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,11 +68,16 @@ void	check_death(t_program *program, t_philo **philos)
 			philos[i]->program->finished = 1;
 			break ;
 		}
-		if (philos[i]->times_eaten == program->n_times_to_eat)
-			if (n_philos_ate++ > program->n_philos)
-				break ;
+		if (program->n_times_to_eat > 0
+			&& philos[i]->times_eaten >= program->n_times_to_eat)
+			n_philos_ate++;
 		if (i == program->n_philos - 1)
+		{
+			if (n_philos_ate == program->n_philos)
+				break ;
 			i = -1;
+			n_philos_ate = 0;
+		}
 	}
 	program->finished = 2;
 }

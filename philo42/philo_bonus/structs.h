@@ -6,7 +6,7 @@
 /*   By: aperol-h <aperol-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 17:57:36 by aperol-h          #+#    #+#             */
-/*   Updated: 2022/04/18 21:51:34 by aperol-h         ###   ########.fr       */
+/*   Updated: 2022/08/18 19:30:35 by aperol-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_program
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				n_times_to_eat;
+	long			timebase;
 	t_philo			*philos;
 	pid_t			*pids;
 	sem_t			*forks_sem;

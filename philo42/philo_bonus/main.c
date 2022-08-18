@@ -6,7 +6,7 @@
 /*   By: aperol-h <aperol-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 16:21:32 by aperol-h          #+#    #+#             */
-/*   Updated: 2022/04/18 21:53:27 by aperol-h         ###   ########.fr       */
+/*   Updated: 2022/08/18 19:39:00 by aperol-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,16 @@ int	create_processes(t_program *program)
 
 	i = -1;
 	init_sems(program);
-	while (i++ < program->n_philos - 1)
+	while (++i < program->n_philos)
 	{
 		program->philos[i].id = i + 1;
 		program->philos[i].program = program;
-		program->philos[i].timestamp_ate = 0;
+		program->philos[i].timestamp_ate = program->timebase;
 		program->philos[i].times_eaten = 0;
+	}
+	i = -1;
+	while (++i < program->n_philos)
+	{
 		if (program->pids[i] != 0)
 			program->pids[i] = fork();
 		if (program->pids[i] == 0)
@@ -86,6 +90,7 @@ int	init_philos(t_program *program)
 {
 	int	i;
 
+	program->timebase = get_time_ms();
 	program->philos = (t_philo *)malloc(program->n_philos * sizeof(t_philo));
 	if (!program->philos)
 		return (0);
